@@ -41,6 +41,7 @@ public class BeanConfiguration {
     public IRolePersistencePort rolePersistencePort() {
         return new RoleMySqlAdapter(roleRepository, roleEntityMapper);
     }
+
     @Bean
     public UserUseCaseUtils userUseCaseUtils() {
         return new UserUseCaseUtils();

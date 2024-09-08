@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,10 +19,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDate;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Validated
@@ -41,36 +43,42 @@ public class UserRestControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
     @Test
+    @WithMockUser(authorities = "ADMINISTRATOR_ROLE")
     public void testCreateUser_Success() throws Exception {
         UserRequestDto userRequestDto = new UserRequestDto(
-                "John", "Doe", "12345678", "1234567890", null,
-                "john.doe@example.com", "password");
+                "John", "Doe", "12345678", "1234567890",
+                LocalDate.of(1990, 1, 1),
+                "john.doe@gmail.com", "password");
 
         doNothing().when(userHandler).createUser(any(UserRequestDto.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/warehouse")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John\",\"surName\":\"Doe\",\"dni\":\"12345678\",\"phone\":\"1234567890\",\"email\":\"john.doe@example.com\",\"password\":\"password\"}"))
+                        .content("{\"name\":\"John\",\"surName\":\"Doe\",\"dni\":\"12345678\",\"phone\":\"1234567890\",\"birthDate\":\"1990-01-01\",\"email\":\"john.doe@example.com\",\"password\":\"password\"}"))
                 .andExpect(status().isCreated());
     }
 
+
     @Test
+    @WithMockUser(authorities = "ADMINISTRATOR_ROLE")
     public void testCreateUser_UserAlreadyExists() throws Exception {
         UserRequestDto userRequestDto = new UserRequestDto(
-                "John", "Doe", "12345678", "1234567890", null,
-                "john.doe@example.com", "password");
+                "John", "Doe", "12345678", "1234567890",
+                LocalDate.of(1990, 1, 1),
+                "john.doe@gmail.com", "password");
 
         doThrow(new UserAlreadyExistsException()).when(userHandler).createUser(any(UserRequestDto.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/warehouse")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John\",\"surName\":\"Doe\",\"dni\":\"12345678\",\"phone\":\"1234567890\",\"email\":\"john.doe@example.com\",\"password\":\"password\"}"))
+                        .content("{\"name\":\"John\",\"surName\":\"Doe\",\"dni\":\"12345678\",\"phone\":\"1234567890\",\"birthDate\":\"1990-01-01\",\"email\":\"john.doe@example.com\",\"password\":\"password\"}"))
                 .andExpect(status().isConflict());
     }
 
     @Test
+    @WithMockUser(authorities = "ADMINISTRATOR_ROLE")
     public void testCreateUser_InvalidInput() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/warehouse")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"\",\"surName\":\"\",\"dni\":\"\",\"phone\":\"\",\"email\":\"not-an-email\",\"password\":\"\"}"))
                 .andExpect(status().isBadRequest())

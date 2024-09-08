@@ -3,6 +3,7 @@ package com.PowerUpFullStack.ms_user.configuration;
 public class Constants {
     private Constants() { throw new IllegalStateException("Utility class"); }
 
+    public static final String WRONG_CREDENTIALS_MESSAGE = "Wrong credentials or role not allowed";
     public static final String DNI_ONLY_CONTAIN_NUMBERS_MESSAGE_EXCEPTION = "Dni only contain numbers";
     public static final String DNI_NOT_VALID_MESSAGE_EXCEPTION = "Dni not valid";
     public static final String EMAIL_ALREADY_EXISTS_MESSAGE_EXCEPTION = "Email already exists";
