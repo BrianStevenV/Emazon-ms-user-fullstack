@@ -13,8 +13,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.ROLE_COLUMN_DESCRIPTION;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.ROLE_COLUMN_NAME;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.ROLE_ENTITY_NAME;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.ROLE_ONE_TO_MANY_MAPPED_BY;
+
 @Entity
-@Table(name = "role")
+@Table(name = ROLE_ENTITY_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -22,10 +27,10 @@ public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name" ,unique = true, nullable = false)
+    @Column(name = ROLE_COLUMN_NAME ,unique = true, nullable = false)
     private String name;
-    @Column(name = "description", unique = true, nullable = false)
+    @Column(name = ROLE_COLUMN_DESCRIPTION, unique = true, nullable = false)
     private String description;
-    @OneToMany(mappedBy = "roleId")
+    @OneToMany(mappedBy = ROLE_ONE_TO_MANY_MAPPED_BY)
     private List<UserEntity> users;
 }

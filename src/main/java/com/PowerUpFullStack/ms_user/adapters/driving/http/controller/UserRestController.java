@@ -3,7 +3,6 @@ package com.PowerUpFullStack.ms_user.adapters.driving.http.controller;
 import com.PowerUpFullStack.ms_user.adapters.driving.http.dtos.request.UserRequestDto;
 import com.PowerUpFullStack.ms_user.adapters.driving.http.handlers.IUserHandler;
 import com.PowerUpFullStack.ms_user.adapters.driving.http.utils.UserRestControllerConstants;
-import com.PowerUpFullStack.ms_user.configuration.Constants;
 import com.PowerUpFullStack.ms_user.configuration.OpenApiConfig.OpenApiConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,6 +34,18 @@ public class UserRestController {
     @PostMapping(UserRestControllerConstants.USER_REST_CONTROLLER_POST_WAREHOUSE)
     @SecurityRequirement(name = OpenApiConstants.SECURITY_REQUIREMENT)
     public ResponseEntity<Void> createAuxiliaryWarehouseUser(@Valid @RequestBody UserRequestDto userRequestDto) {
+        userHandler.createUser(userRequestDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Operation(summary = OpenApiConstants.SUMMARY_CREATE_CUSTOMER,
+            responses = {
+                    @ApiResponse(responseCode = OpenApiConstants.CODE_201, description = OpenApiConstants.DESCRIPTION_CREATE_CUSTOMER_201,
+                            content = @Content(mediaType = OpenApiConstants.APPLICATION_JSON, schema = @Schema(ref = OpenApiConstants.SCHEMAS_MAP))),
+                    @ApiResponse(responseCode = OpenApiConstants.CODE_409, description = OpenApiConstants.DESCRIPTION_CREATE_CUSTOMER_409,
+                            content = @Content(mediaType = OpenApiConstants.APPLICATION_JSON, schema = @Schema(ref = OpenApiConstants.SCHEMAS_ERROR)))})
+    @PostMapping(UserRestControllerConstants.USER_REST_CONTROLLER_POST_CUSTOMER)
+    public ResponseEntity<Void> createCustomerUser(@Valid @RequestBody UserRequestDto userRequestDto) {
         userHandler.createUser(userRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserHandlerImpl implements IUserHandler {
     private final IUserRequestMapper userRequestMapper;
     private final IUserServicePort userServicePort;
+
     @Override
     public void createUser(UserRequestDto userRequestDto) {
         userServicePort.createUser(userRequestMapper.toUser(userRequestDto));

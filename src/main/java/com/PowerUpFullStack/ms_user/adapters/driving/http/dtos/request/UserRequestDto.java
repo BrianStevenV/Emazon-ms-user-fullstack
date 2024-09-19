@@ -28,6 +28,7 @@ public record UserRequestDto(
         String email,
         @NotBlank
         String password
+
 ) {
 
 }

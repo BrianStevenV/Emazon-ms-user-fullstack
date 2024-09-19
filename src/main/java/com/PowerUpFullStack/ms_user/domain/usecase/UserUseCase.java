@@ -21,13 +21,12 @@ public class UserUseCase implements IUserServicePort {
 
     @Override
     public void createUser(User user) {
-        //Especificamente para la hu07, sin embargo, la implementacion cambia con otros roles.
+        user.setRoleId(rolePersistencePort.findRoleByName(userUseCaseUtils.validationPermissionCreateUser()));
         userUseCaseUtils.validateDniUser(user.getDni());
         userUseCaseUtils.validateEmailUser(user.getEmail());
         userUseCaseUtils.validatePhoneNumberUser(user.getPhone());
         userUseCaseUtils.validateUserAge(user.getBirthDate());
-        user.setRoleId(rolePersistencePort.findRoleById(2L));
         userPersistencePort.saveUser(user);
-
     }
+
 }

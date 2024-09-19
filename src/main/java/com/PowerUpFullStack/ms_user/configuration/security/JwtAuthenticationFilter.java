@@ -4,6 +4,7 @@ import com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.adapters.UserDetai
 import com.PowerUpFullStack.ms_user.configuration.security.jwt.utils.JwtMethodUtils;
 import com.PowerUpFullStack.ms_user.configuration.security.jwt.JwtProvider;
 import com.PowerUpFullStack.ms_user.configuration.security.utils.ConstantsSecurity;
+import com.PowerUpFullStack.ms_user.configuration.security.utils.SecurityUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -32,9 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             ConstantsSecurity.SWAGGER_UI, ConstantsSecurity.V3_API_DOCS,
             ConstantsSecurity.ACTUATOR_HEALTH,
             ConstantsSecurity.AUTH_CONTROLLER_POST_LOGIN,
-            ConstantsSecurity.AUTH_CONTROLLER_POST_REFRESH);
+            ConstantsSecurity.AUTH_CONTROLLER_POST_REFRESH,
+            ConstantsSecurity.USERS_CONTROLLER_POST_CUSTOMER);
 
-    private AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -43,6 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = getToken(request);
 
         if(token != null && jwtProvider.validateToken(token)){
+
             String username = JwtMethodUtils.getUsernameFromToken(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -57,12 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String currentRoute = request.getServletPath();
-        for(String prefix : excludedPrefixes) {
-            if(pathMatcher.matchStart(prefix, currentRoute)) {
-                return true;
-            }
-        }
-        return false;
+        return SecurityUtils.isExcludedPrefixRecursively(currentRoute, excludedPrefixes);
     }
 
 

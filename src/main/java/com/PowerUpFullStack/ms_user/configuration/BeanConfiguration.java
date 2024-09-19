@@ -6,6 +6,7 @@ import com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.mappers.IRoleEntit
 import com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.mappers.IUserEntityMapper;
 import com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.repositories.IRoleRepository;
 import com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.repositories.IUserRepository;
+import com.PowerUpFullStack.ms_user.configuration.security.IUserContextService;
 import com.PowerUpFullStack.ms_user.domain.api.IUserServicePort;
 import com.PowerUpFullStack.ms_user.domain.spi.IRolePersistencePort;
 import com.PowerUpFullStack.ms_user.domain.spi.IUserPersistencePort;
@@ -24,6 +25,8 @@ public class BeanConfiguration {
 
     private final IRoleRepository roleRepository;
     private final IRoleEntityMapper roleEntityMapper;
+
+    private final IUserContextService userContextService;
 
 
     private final PasswordEncoder passwordEncoder;
@@ -44,6 +47,6 @@ public class BeanConfiguration {
 
     @Bean
     public UserUseCaseUtils userUseCaseUtils() {
-        return new UserUseCaseUtils();
+        return new UserUseCaseUtils(userContextService);
     }
 }

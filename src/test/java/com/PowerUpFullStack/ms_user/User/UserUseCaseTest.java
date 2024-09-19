@@ -19,7 +19,9 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -44,15 +46,15 @@ public class UserUseCaseTest {
     }
 
     @Test
-    public void createUser_ShouldSaveUser_WhenValidData() {
+    void createUser_ShouldSaveUser_WhenValidData() {
         User user = new User();
         user.setDni("12345678");
-        user.setEmail("test@example.com");
+        user.setEmail("test@gmail.com");
         user.setPhone("+1234567890");
         user.setBirthDate(LocalDate.of(2000, 1, 1));
 
         Role role = new Role(2L, "User", "User role");
-        when(rolePersistencePort.findRoleById(2L)).thenReturn(role);
+        when(rolePersistencePort.findRoleByName(any())).thenReturn(role);
 
         when(userUseCaseUtils.validateDniUser(any())).thenReturn(true);
         when(userUseCaseUtils.validateEmailUser(any())).thenReturn(true);
@@ -62,10 +64,10 @@ public class UserUseCaseTest {
         userUseCase.createUser(user);
 
         verify(userUseCaseUtils).validateDniUser("12345678");
-        verify(userUseCaseUtils).validateEmailUser("test@example.com");
+        verify(userUseCaseUtils).validateEmailUser("test@gmail.com");
         verify(userUseCaseUtils).validatePhoneNumberUser("+1234567890");
         verify(userUseCaseUtils).validateUserAge(LocalDate.of(2000, 1, 1));
-        verify(rolePersistencePort).findRoleById(2L);
+        verify(rolePersistencePort).findRoleByName(any());
         verify(userPersistencePort).saveUser(user);
     }
 
@@ -78,16 +80,17 @@ public class UserUseCaseTest {
         user.setPhone("+1234567890");
         user.setBirthDate(LocalDate.of(2000, 1, 1));
 
-        when(rolePersistencePort.findRoleById(2L)).thenReturn(new Role(2L, "User", "User role"));
+        when(rolePersistencePort.findRoleByName(anyString())).thenReturn(new Role(2L, "User", "User role"));
         doThrow(new DniOnlyContainNumbersException()).when(userUseCaseUtils).validateDniUser(any());
 
-        try {
+        DniOnlyContainNumbersException thrown = assertThrows(DniOnlyContainNumbersException.class, () -> {
             userUseCase.createUser(user);
-        } catch (DniOnlyContainNumbersException e) {
-
-        }
+        });
 
         verify(userUseCaseUtils).validateDniUser("abc123");
+        verify(userUseCaseUtils, never()).validateEmailUser(any());
+        verify(userUseCaseUtils, never()).validatePhoneNumberUser(any());
+        verify(userUseCaseUtils, never()).validateUserAge(any());
         verify(userPersistencePort, never()).saveUser(any());
     }
 
@@ -99,14 +102,12 @@ public class UserUseCaseTest {
         user.setPhone("+1234567890");
         user.setBirthDate(LocalDate.of(2000, 1, 1));
 
-        when(rolePersistencePort.findRoleById(2L)).thenReturn(new Role(2L, "User", "User role"));
+        when(rolePersistencePort.findRoleByName(anyString())).thenReturn(new Role(2L, "User", "User role"));
         doThrow(new EmailNotValidException()).when(userUseCaseUtils).validateEmailUser(any());
 
-        try {
+        EmailNotValidException thrown = assertThrows(EmailNotValidException.class, () -> {
             userUseCase.createUser(user);
-        } catch (EmailNotValidException e) {
-
-        }
+        });
 
         verify(userUseCaseUtils).validateDniUser("12345678");
         verify(userUseCaseUtils).validateEmailUser("invalid-email");
@@ -123,13 +124,12 @@ public class UserUseCaseTest {
         user.setPhone("invalid-phone");
         user.setBirthDate(LocalDate.of(2000, 1, 1));
 
-        when(rolePersistencePort.findRoleById(2L)).thenReturn(new Role(2L, "User", "User role"));
+        when(rolePersistencePort.findRoleByName(anyString())).thenReturn(new Role(2L, "User", "User role"));
         doThrow(new PhoneNumberIsNotValidException()).when(userUseCaseUtils).validatePhoneNumberUser(any());
 
-        try {
+        PhoneNumberIsNotValidException thrown = assertThrows(PhoneNumberIsNotValidException.class, () -> {
             userUseCase.createUser(user);
-        } catch (PhoneNumberIsNotValidException e) {
-        }
+        });
 
         verify(userUseCaseUtils).validateDniUser("12345678");
         verify(userUseCaseUtils).validateEmailUser("test@example.com");
@@ -144,15 +144,14 @@ public class UserUseCaseTest {
         user.setDni("12345678");
         user.setEmail("test@example.com");
         user.setPhone("+1234567890");
-        user.setBirthDate(LocalDate.of(2010, 1, 1)); // Too young
+        user.setBirthDate(LocalDate.of(2010, 1, 1));
 
-        when(rolePersistencePort.findRoleById(2L)).thenReturn(new Role(2L, "User", "User role"));
+        when(rolePersistencePort.findRoleByName(anyString())).thenReturn(new Role(2L, "User", "User role"));
         doThrow(new AgeNotValidException()).when(userUseCaseUtils).validateUserAge(any());
 
-        try {
+        AgeNotValidException thrown = assertThrows(AgeNotValidException.class, () -> {
             userUseCase.createUser(user);
-        } catch (AgeNotValidException e) {
-        }
+        });
 
         verify(userUseCaseUtils).validateDniUser("12345678");
         verify(userUseCaseUtils).validateEmailUser("test@example.com");

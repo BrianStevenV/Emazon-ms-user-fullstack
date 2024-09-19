@@ -7,6 +7,7 @@ import com.PowerUpFullStack.ms_user.domain.exceptions.DniIsNotValidException;
 import com.PowerUpFullStack.ms_user.domain.exceptions.DniOnlyContainNumbersException;
 import com.PowerUpFullStack.ms_user.domain.exceptions.EmailNotValidException;
 import com.PowerUpFullStack.ms_user.domain.exceptions.PhoneNumberIsNotValidException;
+import com.PowerUpFullStack.ms_user.domain.exceptions.RoleIsInvalidPermissionCreateUserException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -95,5 +96,11 @@ public class UserControllerAdvisor {
     public ResponseEntity<Map<String, String>> handleDniOnlyContainNumbersException(DniOnlyContainNumbersException ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE, DNI_ONLY_CONTAIN_NUMBERS_MESSAGE_EXCEPTION));
+    }
+
+    @ExceptionHandler(RoleIsInvalidPermissionCreateUserException.class)
+    public ResponseEntity<Map<String, String>> handleRoleIsInvalidPermissionCreateUserException(RoleIsInvalidPermissionCreateUserException ex){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE, ex.getMessage()));
     }
 }

@@ -6,4 +6,5 @@ public class UserRestControllerConstants {
     public static final String USER_REST_CONTROLLER_BASE_PATH = "/api/v1/users";
 
     public static final String USER_REST_CONTROLLER_POST_WAREHOUSE = "/warehouse";
+    public static final String USER_REST_CONTROLLER_POST_CUSTOMER = "/customer";
 }

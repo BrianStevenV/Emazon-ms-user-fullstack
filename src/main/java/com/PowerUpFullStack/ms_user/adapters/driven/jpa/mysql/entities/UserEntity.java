@@ -14,8 +14,18 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.USER_COLUMN_BIRTHDATE;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.USER_COLUMN_DNI;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.USER_COLUMN_EMAIL;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.USER_COLUMN_NAME;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.USER_COLUMN_PASSWORD;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.USER_COLUMN_PHONE;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.USER_COLUMN_ROLE_ID;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.USER_COLUMN_SURNAME;
+import static com.PowerUpFullStack.ms_user.adapters.driven.jpa.mysql.entities.utils.EntityConstant.USER_ENTITY_NAME;
+
 @Entity
-@Table(name = "user")
+@Table(name = USER_ENTITY_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -23,21 +33,21 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name", nullable = false)
+    @Column(name = USER_COLUMN_NAME, nullable = false)
     private String name;
-    @Column(name = "surname", nullable = false)
+    @Column(name = USER_COLUMN_SURNAME, nullable = false)
     private String surName;
-    @Column(name = "dni", unique = true, nullable = false)
+    @Column(name = USER_COLUMN_DNI, unique = true, nullable = false)
     private String dni;
-    @Column(name = "phone", unique = true, nullable = false)
+    @Column(name = USER_COLUMN_PHONE, unique = true, nullable = false)
     private String phone;
-    @Column(name = "birthdate", nullable = false)
+    @Column(name = USER_COLUMN_BIRTHDATE, nullable = false)
     private LocalDate birthDate;
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = USER_COLUMN_EMAIL, unique = true, nullable = false)
     private String email;
-    @Column(name = "password", nullable = false)
+    @Column(name = USER_COLUMN_PASSWORD, nullable = false)
     private String password;
     @ManyToOne
-    @JoinColumn(name = "id_rol")
+    @JoinColumn(name = USER_COLUMN_ROLE_ID)
     private RoleEntity roleId;
 }

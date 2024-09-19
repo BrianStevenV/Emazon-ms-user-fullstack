@@ -12,6 +12,10 @@ public class OpenApiConstants {
     public static final String DESCRIPTION_CREATE_WAREHOUSE_201 = "Warehouse user created";
     public static final String DESCRIPTION_CREATE_WAREHOUSE_409 = "Warehouse user exists";
 
+    public static final String SUMMARY_CREATE_CUSTOMER = "Add a new Customer user";
+    public static final String DESCRIPTION_CREATE_CUSTOMER_201 = "Customer user created";
+    public static final String DESCRIPTION_CREATE_CUSTOMER_409 = "Customer user exists";
+
     // Content
 
     public static final String APPLICATION_JSON = "application/json";

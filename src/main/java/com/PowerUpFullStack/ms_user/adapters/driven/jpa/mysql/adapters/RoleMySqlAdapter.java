@@ -15,4 +15,9 @@ public class RoleMySqlAdapter implements IRolePersistencePort {
     public Role findRoleById(Long roleId) {
         return roleEntityMapper.toRole(roleRepository.findById(roleId).orElseThrow());
     }
+
+    @Override
+    public Role findRoleByName(String roleName) {
+        return roleEntityMapper.toRole(roleRepository.findByName(roleName).orElseThrow());
+    }
 }

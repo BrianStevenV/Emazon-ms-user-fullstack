@@ -3,6 +3,7 @@ package com.PowerUpFullStack.ms_user.configuration;
 public class Constants {
     private Constants() { throw new IllegalStateException("Utility class"); }
 
+    public static final String ROLE_IS_NOT_AUTHORIZED_CREATE_USER_MESSAGE_EXCEPTION = "The role is not authorized to create a user";
     public static final String WRONG_CREDENTIALS_MESSAGE = "Wrong credentials or role not allowed";
     public static final String DNI_ONLY_CONTAIN_NUMBERS_MESSAGE_EXCEPTION = "Dni only contain numbers";
     public static final String DNI_NOT_VALID_MESSAGE_EXCEPTION = "Dni not valid";

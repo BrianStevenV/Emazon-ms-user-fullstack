@@ -49,7 +49,8 @@ public class WebSecurity {
                         .requestMatchers(ConstantsSecurity.SWAGGER_UI_HTML,ConstantsSecurity.SWAGGER_UI,
                                 ConstantsSecurity.V3_API_DOCS, ConstantsSecurity.ACTUATOR_HEALTH,
                                 ConstantsSecurity.AUTH_CONTROLLER_POST_LOGIN,
-                                ConstantsSecurity.AUTH_CONTROLLER_POST_REFRESH).permitAll()
+                                ConstantsSecurity.AUTH_CONTROLLER_POST_REFRESH,
+                                ConstantsSecurity.USERS_CONTROLLER_POST_CUSTOMER).permitAll()
                         .requestMatchers(HttpMethod.POST, ConstantsSecurity.USERS_CONTROLLER_POST_WAREHOUSE)
                         .hasAuthority(ConstantsSecurity.ADMINISTRATOR_ROLE)
                         .anyRequest().authenticated()
